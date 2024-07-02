@@ -2,7 +2,6 @@ pipeline {
     agent any
     
     parameters {
-        string(name: 'BRANCH', defaultValue: 'main', description: 'Select a Git Branch to trigger CI')
         booleanParam(name: 'USE_NX_CLOUD', defaultValue: false, description: 'Use Nx Cloud to build')
     }
 
@@ -10,14 +9,12 @@ pipeline {
         NX_CLOUD = "${params.USE_NX_CLOUD}"
     }
 
-    triggers {
-        pollSCM('* * * * *')
-    }
-
     stages {
         stage('Checkout') {
             steps {
-                git branch: "${params.BRANCH}", url: 'https://github.com/roy94bit/simple-node-js-react-npm-app'
+                sh 'printenv'
+                git branch: "${env.BRANCH_NAME}", url: 'https://github.com/roy94bit/simple-node-js-react-npm-app.git'
+                echo "Building branch: ${env.BRANCH_NAME}"
             }
         }
 
