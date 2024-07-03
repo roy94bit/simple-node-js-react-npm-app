@@ -20,7 +20,7 @@ pipeline {
 
         stage('Build') {
             steps {
-                sh 'echo Building create new PR 2'
+                sh 'echo Building create new PR 5'
                 script {
                     if (env.NX_CLOUD.toBoolean()) {
                         sh 'echo Building with Nx Cloud...'
@@ -38,6 +38,18 @@ pipeline {
         always {
             echo 'Cleaning up...'
             // Add any cleanup commands here
+        }
+        success {
+            script {
+                // Update the build status to "Success" on GitHub
+                step([$class: 'GitHubCommitStatusSetter', statusResultSource: [$class: 'ConditionalStatusResultSource', results: [[$class: 'AnyBuildResult', message: 'Success', state: 'SUCCESS']]]])
+            }
+        }
+        failure {
+            script {
+                // Update the build status to "Failure" on GitHub
+                step([$class: 'GitHubCommitStatusSetter', statusResultSource: [$class: 'ConditionalStatusResultSource', results: [[$class: 'AnyBuildResult', message: 'Failure', state: 'FAILURE']]]])
+            }
         }
     }
 }
