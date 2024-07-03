@@ -39,5 +39,17 @@ pipeline {
             echo 'Cleaning up...'
             // Add any cleanup commands here
         }
+        success {
+            script {
+                // Update the build status to "Success" on GitHub
+                step([$class: 'GitHubCommitStatusSetter', statusResultSource: [$class: 'ConditionalStatusResultSource', results: [[$class: 'AnyBuildResult', message: 'Success', state: 'SUCCESS']]]])
+            }
+        }
+        failure {
+            script {
+                // Update the build status to "Failure" on GitHub
+                step([$class: 'GitHubCommitStatusSetter', statusResultSource: [$class: 'ConditionalStatusResultSource', results: [[$class: 'AnyBuildResult', message: 'Failure', state: 'FAILURE']]]])
+            }
+        }
     }
 }
