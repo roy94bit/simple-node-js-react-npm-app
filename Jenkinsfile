@@ -20,6 +20,7 @@ pipeline {
 
         stage('Build') {
             steps {
+                sh 'echo Building create new PR'
                 script {
                     if (env.NX_CLOUD.toBoolean()) {
                         sh 'echo Building with Nx Cloud...'
